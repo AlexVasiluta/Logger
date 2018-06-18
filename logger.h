@@ -11,21 +11,26 @@
 typedef struct Logger Logger;
 struct Logger {
 	const char* filename;
-	bool filewrite;
+	bool filewrite, timerenabled;
 	clock_t timer;
 };
 
 void startClock(Logger *logger)
 {
 	logger->timer = clock();
+	logger->timerenabled = true;
 }
 
 // The REAL logger
 int logList(Logger logger, const char* msg, va_list list)
 {
-	clock_t right_now = clock();
-	double time = ((double)(right_now - logger.timer)) / CLOCKS_PER_SEC;
-	printf("%fs: ", time);
+	double time = 0.0;
+	if(logger.timerenabled)
+	{
+		clock_t right_now = clock();
+		time = ((double)(right_now - logger.timer)) / CLOCKS_PER_SEC;
+		printf("%.5fs | ", time);
+	}
 	vprintf(msg, list);
 	printf("\n");
 	if(logger.filewrite)
@@ -36,7 +41,8 @@ int logList(Logger logger, const char* msg, va_list list)
 			fprintf(stderr, "Could not initialize file %s\n", logger.filename);
 			return -1;
 		}
-		fprintf(file, "%fs: ", time);
+		if(logger.timerenabled)
+			fprintf(file, "%.5fs | ", time);
 		vfprintf(file, msg, list);
 		fprintf(file, "\n");
 		fclose(file);
