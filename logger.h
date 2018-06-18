@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <time.h>
 #include <stdarg.h>
@@ -92,3 +96,8 @@ int logErr(Logger logger, const char* msg, ...)
 	va_end(args);
 	return rv;
 }
+
+#ifdef __cplusplus
+}
+#endif
+
