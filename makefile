@@ -1,5 +1,6 @@
-GXX=g++
-FLAGS=-Wall
+GXX=gcc
+FLAGS=-Wall -std=c11
+OUTPUT_FILE=test
 
-logger: test.cpp logger.hpp
-	$(GXX) $(FLAGS) -o test test.cpp
+logger: test.c logger.h
+	$(GXX) $(FLAGS) -o $(OUTPUT_FILE) test.c
